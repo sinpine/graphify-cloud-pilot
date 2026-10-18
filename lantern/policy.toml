@@ -1,0 +1,6 @@
+[checkout]
+shipping_cents = 300
+free_shipping_threshold = 5000
+max_quantity = 40
+voucher_percent = 10
+max_refund_cents = 20000
