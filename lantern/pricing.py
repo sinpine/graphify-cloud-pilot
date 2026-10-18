@@ -11,15 +11,17 @@ def apply_voucher(subtotal: int, voucher: str, policy: Policy) -> int:
     return subtotal * policy.voucher_percent // 100 if voucher == "WELCOME" else 0
 
 
-def flat_shipping_fee(policy: Policy) -> int:
-    """Baseline delivery rule: fixed fee even above configured threshold."""
+def shipping_fee_for_subtotal(subtotal_cents: int, policy: Policy) -> int:
+    """Free delivery uses merchandise subtotal before applying a voucher."""
+    if subtotal_cents >= policy.free_shipping_threshold:
+        return 0
     return policy.shipping_cents
 
 
 def quote_order(order: Order, policy: Policy) -> Quote:
     subtotal = calculate_subtotal(order)
     discount = apply_voucher(subtotal, order.voucher, policy)
-    shipping = flat_shipping_fee(policy)
+    shipping = shipping_fee_for_subtotal(subtotal, policy)
     return Quote(subtotal, discount, shipping, max(0, subtotal - discount) + shipping)
 
 
